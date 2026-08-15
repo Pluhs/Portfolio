@@ -1,6 +1,6 @@
-# Mohammed Alassaad — Portfolio
+# Mohammed Al Assad — Portfolio
 
-A motion-led, editorial portfolio for Mohammed Alassaad. The site focuses on backend systems,
+A motion-led, editorial portfolio for Mohammed Al Assad. The site focuses on backend systems,
 distributed workflows, full-stack product work, and applied AI without using generic project-card layouts.
 
 **Live site:** https://pluhs.github.io/Portfolio/
