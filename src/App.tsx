@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 const GITHUB_URL = 'https://github.com/Pluhs'
 const LINKEDIN_URL = 'https://www.linkedin.com/in/mohammed-alassad/'
+const EMAIL_URL = 'mailto:mohammed.alassad2001@gmail.com'
 const ASSET_ROOT = import.meta.env.BASE_URL
 
 type ArrowProps = {
@@ -53,10 +54,11 @@ function Header() {
         <span>{open ? 'Close' : 'Menu'}</span>
       </button>
       <nav id="site-nav" className={open ? 'site-nav is-open' : 'site-nav'} aria-label="Main navigation">
-        <a href="#aeroml" onClick={() => setOpen(false)}>AeroML</a>
         <a href="#work" onClick={() => setOpen(false)}>Work</a>
         <a href="#experience" onClick={() => setOpen(false)}>Experience</a>
-        <a className="site-nav__cta" href="#contact" onClick={() => setOpen(false)}>Hire me</a>
+        <a href={LINKEDIN_URL} target="_blank" rel="noreferrer" onClick={() => setOpen(false)}>LinkedIn</a>
+        <a href={GITHUB_URL} target="_blank" rel="noreferrer" onClick={() => setOpen(false)}>GitHub</a>
+        <a className="site-nav__cta" href={EMAIL_URL} onClick={() => setOpen(false)}>Let’s talk</a>
       </nav>
     </header>
   )
@@ -158,14 +160,11 @@ function Hero() {
             whole product better.
           </p>
           <div className="hero__actions">
-            <a className="action-link action-link--primary" href={LINKEDIN_URL} target="_blank" rel="noreferrer">
-              Hire me / Let’s talk <ExternalArrow />
+            <a className="action-link action-link--primary" href={EMAIL_URL}>
+              Let’s talk <ExternalArrow />
             </a>
             <a className="action-link" href="#aeroml">
               View selected work <Arrow direction="down" />
-            </a>
-            <a className="action-link" href={GITHUB_URL} target="_blank" rel="noreferrer">
-              GitHub <ExternalArrow />
             </a>
           </div>
         </div>
@@ -733,11 +732,14 @@ function Contact() {
         <p>Have a hard system or a useful product to build?</p>
         <h2>Let’s make it work<br />in the messy world.</h2>
         <div className="contact__links">
+          <a href={EMAIL_URL}>
+            Let’s talk <ExternalArrow />
+          </a>
           <a href={LINKEDIN_URL} target="_blank" rel="noreferrer">
-            Start a conversation <ExternalArrow />
+            LinkedIn <ExternalArrow />
           </a>
           <a href={GITHUB_URL} target="_blank" rel="noreferrer">
-            Inspect the code <ExternalArrow />
+            GitHub <ExternalArrow />
           </a>
         </div>
       </div>
