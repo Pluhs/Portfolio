@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 
 const GITHUB_URL = 'https://github.com/Pluhs'
 const LINKEDIN_URL = 'https://www.linkedin.com/in/mohammed-alassad/'
+const AEROML_URL = 'https://github.com/Aymane-Arfaoui/AeroMl'
+const ASSET_ROOT = import.meta.env.BASE_URL
 
 type ArrowProps = {
   direction?: 'right' | 'down'
@@ -52,6 +54,7 @@ function Header() {
         <span>{open ? 'Close' : 'Menu'}</span>
       </button>
       <nav id="site-nav" className={open ? 'site-nav is-open' : 'site-nav'} aria-label="Main navigation">
+        <a href="#aeroml" onClick={() => setOpen(false)}>AeroML</a>
         <a href="#work" onClick={() => setOpen(false)}>Work</a>
         <a href="#about" onClick={() => setOpen(false)}>About</a>
         <a href="#contact" onClick={() => setOpen(false)}>Contact</a>
@@ -151,8 +154,8 @@ function Hero() {
             across distributed systems, product infrastructure, and applied AI.
           </p>
           <div className="hero__actions">
-            <a className="action-link action-link--primary" href="#work">
-              Explore the systems <Arrow direction="down" />
+            <a className="action-link action-link--primary" href="#aeroml">
+              See what I led <Arrow direction="down" />
             </a>
             <a className="action-link" href={GITHUB_URL} target="_blank" rel="noreferrer">
               GitHub <ExternalArrow />
@@ -242,7 +245,7 @@ function AsyncraProject() {
   return (
     <article className="project project--asyncra">
       <div className="project__copy reveal">
-        <p className="project__kicker">01 / Durable orchestration</p>
+        <p className="project__kicker">02 / Durable orchestration</p>
         <h3>Asyncra</h3>
         <p className="project__thesis">Queues are easy. Recovery is the product.</p>
         <p className="project__description">
@@ -314,7 +317,7 @@ function AtlasProject() {
     <article className="project project--atlas">
       <AtlasVisual />
       <div className="project__copy reveal">
-        <p className="project__kicker">02 / Local-first ML infrastructure</p>
+        <p className="project__kicker">03 / Local-first ML infrastructure</p>
         <h3>AtlasML</h3>
         <p className="project__thesis">Models deserve contracts, not vibes.</p>
         <p className="project__description">
@@ -331,36 +334,129 @@ function AtlasProject() {
   )
 }
 
-function PerformanceVisual() {
+const aeroStages = [
+  {
+    code: 'Bronze',
+    label: 'Ingest the messy reality',
+    detail: 'Stream large CSV and Excel datasets into profiled, traceable columnar artifacts.',
+    personal: 'I substantially optimized this path: streaming ingestion, progress feedback, safer limits, and fewer UI freezes.',
+  },
+  {
+    code: 'Silver',
+    label: 'Make it trustworthy',
+    detail: 'Apply a deterministic cleaning plan while preserving lineage and reproducibility.',
+    personal: 'I helped harden the integration around failures, caching, validation, and the desktop workflow that held the pieces together.',
+  },
+  {
+    code: 'Gold',
+    label: 'Put the model to work',
+    detail: 'Train, compare, explain, and replay predictions without leaving the local desktop app.',
+    personal: 'I shipped persistent training progress, portable workspace bundles, quality gates, and the final reliability work behind the demo.',
+  },
+]
+
+function AeroPipeline() {
+  const [active, setActive] = useState(0)
+  const [running, setRunning] = useState(false)
+  const timers = useRef<number[]>([])
+
+  const clearTimers = () => {
+    timers.current.forEach((timer) => window.clearTimeout(timer))
+    timers.current = []
+  }
+
+  const selectStage = (index: number) => {
+    clearTimers()
+    setRunning(false)
+    setActive(index)
+  }
+
+  const runPipeline = () => {
+    clearTimers()
+    setRunning(true)
+    setActive(0)
+    timers.current = [
+      window.setTimeout(() => setActive(1), 1000),
+      window.setTimeout(() => setActive(2), 2000),
+      window.setTimeout(() => setRunning(false), 3000),
+    ]
+  }
+
+  useEffect(() => clearTimers, [])
+
   return (
-    <div className="performance-visual" aria-label="Data processing improved from 10.4 seconds to 4.35 seconds">
-      <div className="performance-track">
-        <span className="performance-label">Before</span>
-        <span className="performance-bar performance-bar--before"><b>10.4s</b></span>
+    <div className={running ? 'aero-pipeline is-running' : 'aero-pipeline'}>
+      <div className="aero-pipeline__topline">
+        <span>Local workflow / {running ? 'processing' : 'ready'}</span>
+        <span>{String(active + 1).padStart(2, '0')} / 03</span>
       </div>
-      <div className="performance-track">
-        <span className="performance-label">After</span>
-        <span className="performance-bar performance-bar--after"><b>4.35s</b></span>
+      <ol className="aero-pipeline__stages" aria-label="AeroML data pipeline">
+        {aeroStages.map((stage, index) => (
+          <li key={stage.code} className={active === index ? 'is-active' : active > index ? 'is-complete' : ''}>
+            <button type="button" onClick={() => selectStage(index)} aria-pressed={active === index}>
+              <span>0{index + 1}</span>
+              <strong>{stage.code}</strong>
+            </button>
+          </li>
+        ))}
+      </ol>
+      <div className="aero-pipeline__readout" aria-live="polite">
+        <p>{aeroStages[active].label}</p>
+        <h4>{aeroStages[active].detail}</h4>
+        <small>{aeroStages[active].personal}</small>
       </div>
-      <p>955 MB manufacturing dataset</p>
+      <button className="aero-pipeline__run" type="button" onClick={runPipeline} disabled={running}>
+        <span>{running ? 'Pipeline running' : active === 2 ? 'Run it again' : 'Run the pipeline'}</span>
+        <Arrow />
+      </button>
     </div>
   )
 }
 
 function AeroProject() {
   return (
-    <article className="project project--aero">
-      <div className="project__copy reveal">
-        <p className="project__kicker">03 / Capstone with Pratt &amp; Whitney Canada</p>
-        <h3>AeroML</h3>
-        <p className="project__thesis">Make heavy data feel light.</p>
-        <p className="project__description">
-          As technical co-lead, I helped build an end-to-end no-code ML product for manufacturing:
-          ingest, clean, explore, train, explain, and predict from one desktop workflow.
-        </p>
-        <p className="project__stack">FastAPI · React · Electron · DuckDB · PyArrow · SQLite</p>
+    <article id="aeroml" className="project project--aero">
+      <div className="aero-feature__main">
+        <div className="project__copy reveal">
+          <div className="aero-wordmark">
+            <img src={`${ASSET_ROOT}aeroml-logo.png`} alt="" />
+            <span>Flagship project</span>
+          </div>
+          <p className="project__kicker">01 / Team lead · Pratt &amp; Whitney Canada capstone</p>
+          <h3>AeroML</h3>
+          <p className="project__thesis">I learned to lead the system—and the people building it.</p>
+          <p className="project__description">
+            AeroML is a local-first desktop AutoML platform built with a 10+ engineer team for
+            manufacturing workflows. I led technical direction and delivery, then went deepest on
+            the integration work that made the product fast, portable, secure, and demo-ready.
+          </p>
+          <div className="aero-proof" aria-label="AeroML outcomes">
+            <p><strong>10+</strong><span>engineers led across frontend, backend, ML, and delivery</span></p>
+            <p><strong>38.2%</strong><span>lower MAE than the use-case baseline</span></p>
+          </div>
+          <p className="project__stack">FastAPI · React · Electron · DuckDB · PyArrow · SQLite</p>
+          <div className="project__links">
+            <a href={AEROML_URL} target="_blank" rel="noreferrer">
+              Explore the team repository <ExternalArrow />
+            </a>
+          </div>
+        </div>
+        <AeroPipeline />
       </div>
-      <PerformanceVisual />
+      <figure className="aero-team reveal">
+        <img
+          src={`${ASSET_ROOT}aeroml-team.jpg`}
+          alt="The AeroML team standing together at the Concordia Capstone Showcase"
+        />
+        <figcaption>
+          <span>Leadership, in the real world</span>
+          <p>
+            Ten people, one deadline, and a system spanning desktop packaging, data engineering,
+            machine learning, and product UX. My job was to keep those boundaries moving together.
+          </p>
+          <small>Concordia Capstone Showcase · Montréal</small>
+        </figcaption>
+      </figure>
     </article>
   )
 }
@@ -370,12 +466,12 @@ function Work() {
     <section id="work" className="work-section">
       <div className="section-shell">
         <SectionIntro index="01 / Selected systems">
-          Three projects, one recurring question: what happens when the clean demo meets the real world?
+          AeroML is the flagship: the project where engineering depth became technical leadership.
         </SectionIntro>
       </div>
+      <AeroProject />
       <AsyncraProject />
       <AtlasProject />
-      <AeroProject />
     </section>
   )
 }
@@ -418,9 +514,9 @@ const experience = [
   },
   {
     years: '2025 — 2026',
-    role: 'Technical Co-Lead',
+    role: 'Team Lead & Software Engineer',
     place: 'AeroML · Pratt & Whitney Canada capstone',
-    detail: 'Turned an ML workflow into a tested desktop product while coordinating the capstone team.',
+    detail: 'Led 10+ engineers and turned a fragmented ML workflow into a tested, local-first desktop product.',
   },
   {
     years: '2024',
