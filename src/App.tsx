@@ -174,6 +174,25 @@ function Hero() {
   )
 }
 
+function TechStack({
+  items,
+  label = 'Built with',
+  compact = false,
+}: {
+  items: string[]
+  label?: string
+  compact?: boolean
+}) {
+  return (
+    <div className={compact ? 'stack-ledger stack-ledger--compact' : 'stack-ledger'}>
+      <span className="stack-ledger__label">{label}</span>
+      <ul aria-label={`${label}: ${items.join(', ')}`}>
+        {items.map((item) => <li key={item}>{item}</li>)}
+      </ul>
+    </div>
+  )
+}
+
 function QueueVisual({ crashed }: { crashed: boolean }) {
   return (
     <div className={crashed ? 'queue-visual is-crashed' : 'queue-visual'} aria-hidden="true">
@@ -261,7 +280,7 @@ function AsyncraProject() {
           <strong>874</strong>
           <span>jobs / sec median locally<br />76,000 jobs · 16 workers</span>
         </p>
-        <p className="project__stack">Spring Boot · PostgreSQL · TypeScript · React · SSE</p>
+        <TechStack items={['Spring Boot', 'PostgreSQL', 'TypeScript', 'React', 'SSE']} />
         <div className="project__links">
           <a href="https://asyncra.vercel.app" target="_blank" rel="noreferrer">
             Open the live console <ExternalArrow />
@@ -346,7 +365,7 @@ function AtlasProject() {
             preprocessing, and evaluation changes only ship when held-out results justify them.
           </p>
         </div>
-        <p className="project__stack">Electron · React · Spring Boot · PostgreSQL · Python · XGBoost · LightGBM · CatBoost</p>
+        <TechStack items={['Electron', 'React', 'Spring Boot', 'PostgreSQL', 'Python', 'XGBoost', 'LightGBM', 'CatBoost']} />
         <div className="project__links">
           <a href="https://github.com/Pluhs/AtlasML" target="_blank" rel="noreferrer">
             Follow the independent build <ExternalArrow />
@@ -380,7 +399,10 @@ function SgtvProject() {
             to explore the SGTV world. Product scope and technology choices are being validated now.
           </p>
         </div>
-        <p className="project__stack">Product direction · Cloud architecture · Video streaming · Full-stack delivery</p>
+        <TechStack
+          label="System scope"
+          items={['Product direction', 'Cloud architecture', 'Video streaming', 'Full-stack delivery']}
+        />
       </div>
       <div className="sgtv-visual reveal" aria-label="Secret Garden TV character and app direction">
         <div className="sgtv-portal">
@@ -556,7 +578,7 @@ function AeroProject() {
             <p><strong>10+</strong><span>person team co-led across frontend, backend, ML, and delivery</span></p>
             <p><strong>38.2%</strong><span>lower MAE than the use-case baseline</span></p>
           </div>
-          <p className="project__stack">FastAPI · React · Electron · DuckDB · PyArrow · SQLite</p>
+          <TechStack items={['FastAPI', 'Python', 'React', 'Electron', 'DuckDB', 'PyArrow', 'SQLite']} />
         </div>
         <AeroPipeline />
       </div>
@@ -570,19 +592,19 @@ const moreProjects = [
     name: 'ConUMaps',
     label: 'Mobile campus companion · extended team capstone',
     description: 'An Expo mobile app that connects outdoor directions, indoor pathfinding, Concordia shuttle data, Google Calendar, and a multi-stop smart planner. After the course project, I continued the repo with a feature-domain refactor, routing improvements, stronger tests, and a more reliable local setup.',
-    stack: 'React Native · Expo · Flask · Mapbox · Google Calendar',
+    stack: ['React Native', 'Expo', 'Flask', 'Mapbox', 'Google Calendar'],
   },
   {
     name: 'SEED',
     label: 'AI job-search operating system · formerly MapleLaunch · paused',
     description: 'A web-first system for multi-source job discovery, transparent fit scoring, resume and application-packet workflows, and end-to-end application tracking. Its architecture combines a Next.js product surface, Spring control plane, Supabase state, and a durable Python ingestion worker for normalization and deduplication.',
-    stack: 'Next.js · Spring Boot · Supabase · Python · Electron',
+    stack: ['Next.js', 'Spring Boot', 'Supabase', 'Python', 'Electron'],
   },
   {
     name: 'YTtoMedia',
     label: 'Packaged cross-platform desktop utility',
     description: 'A privacy-conscious YouTube audio and video downloader with real format probing, a concurrent download queue, progress reporting, recent files, and extractor updates. The macOS and Windows builds bundle their own yt-dlp and media runtimes so the app works without a developer environment.',
-    stack: 'Electron · Node.js · yt-dlp · FFmpeg · GitHub Actions',
+    stack: ['Electron', 'Node.js', 'yt-dlp', 'FFmpeg', 'GitHub Actions'],
   },
 ]
 
@@ -602,7 +624,7 @@ function MoreProjects() {
               <div className="more-projects__details">
                 <strong>{project.label}</strong>
                 <p>{project.description}</p>
-                <small>{project.stack}</small>
+                <TechStack items={project.stack} compact />
               </div>
             </article>
           ))}
@@ -636,6 +658,7 @@ const experienceCompanies = [
         role: 'Software Engineer & Technical Lead',
         context: 'Volunteer · SGTV digital platform',
         detail: 'Leading the product from stakeholder requirements and system architecture through frontend flows, backend services, APIs, authentication, media delivery, cloud infrastructure, and CI/CD.',
+        stack: ['Cloud architecture', 'Video streaming', 'APIs', 'Authentication', 'CI/CD'],
       },
     ],
   },
@@ -651,6 +674,7 @@ const experienceCompanies = [
         context: 'AeroML industry capstone',
         detail: 'Co-led a 10+ person team building a local-first AutoML desktop platform for internal aerospace-manufacturing workflows.',
         impact: '38.2% lower MAE than the internal baseline · model development reduced from weeks to minutes',
+        stack: ['Python', 'FastAPI', 'React', 'Electron', 'DuckDB', 'PyArrow'],
       },
     ],
   },
@@ -665,12 +689,14 @@ const experienceCompanies = [
         role: 'Software Developer Intern',
         context: 'Python backend · Linux',
         detail: 'Built backend tools and integrated Mend REST APIs for dependency, vulnerability, and compliance workflows; improved performance through profiling, concurrency, and thread pools.',
+        stack: ['Python', 'Linux', 'REST APIs', 'Concurrency', 'Mend'],
       },
       {
         years: 'Sep 2023 — Dec 2023',
         role: 'Software Developer Intern',
         context: 'Java and Node.js services',
         detail: 'Developed backend services with Spring Boot, Node.js, MongoDB, REST APIs, and Docker while supporting Azure deployments and improving Git and CI/CD workflows.',
+        stack: ['Spring Boot', 'Node.js', 'MongoDB', 'Docker', 'Azure'],
       },
     ],
   },
@@ -708,6 +734,7 @@ function Experience() {
                     <div className="position-row__story">
                       <p>{position.detail}</p>
                       {'impact' in position && position.impact && <strong>{position.impact}</strong>}
+                      <TechStack items={position.stack} label="Stack used" compact />
                     </div>
                   </div>
                 ))}

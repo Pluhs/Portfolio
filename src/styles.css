@@ -625,6 +625,79 @@ button {
   letter-spacing: 0.04em;
 }
 
+.stack-ledger {
+  max-width: 680px;
+  margin-top: 38px;
+  padding-top: 15px;
+  border-top: 1px solid currentColor;
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  align-items: start;
+  gap: 14px;
+}
+
+.stack-ledger__label {
+  padding-top: 7px;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  opacity: 0.68;
+}
+
+.stack-ledger ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  list-style: none;
+}
+
+.stack-ledger li {
+  padding: 7px 10px 6px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.035em;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.08);
+  transition: color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.stack-ledger li:hover {
+  color: var(--paper);
+  background: var(--ink);
+  transform: translateY(-2px);
+}
+
+.project--asyncra .stack-ledger li:hover,
+.more-projects .stack-ledger li:hover {
+  color: var(--ink);
+  background: var(--lime);
+}
+
+.stack-ledger--compact {
+  margin-top: 17px;
+  padding-top: 12px;
+  grid-template-columns: 82px 1fr;
+  gap: 10px;
+}
+
+.stack-ledger--compact .stack-ledger__label {
+  padding-top: 5px;
+  font-size: 8px;
+}
+
+.stack-ledger--compact li {
+  padding: 5px 8px;
+  font-size: 8px;
+}
+
 .project__links a,
 .project__links button {
   padding: 0;
@@ -1577,6 +1650,36 @@ button {
   line-height: 1.6;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.position-row__story .stack-ledger {
+  color: var(--ink);
+}
+
+.position-row__story .stack-ledger__label {
+  color: var(--ink-soft);
+}
+
+.position-row__story .stack-ledger li {
+  border-color: rgba(20, 37, 31, 0.28);
+  background: rgba(255, 254, 247, 0.5);
+}
+
+.more-projects__details .stack-ledger {
+  color: var(--paper);
+}
+
+@media (max-width: 620px) {
+  .stack-ledger,
+  .stack-ledger--compact {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .stack-ledger__label,
+  .stack-ledger--compact .stack-ledger__label {
+    padding-top: 0;
+  }
 }
 
 .position-row time {
