@@ -2505,7 +2505,7 @@ button {
   top: 50%;
   right: auto;
   left: 15px;
-  z-index: 28;
+  z-index: 35;
   width: 104px;
   padding: 16px 8px 14px 34px;
   color: var(--ink);
@@ -2519,8 +2519,8 @@ button {
   border: 1px solid rgba(20, 37, 31, 0.13);
   border-radius: 18px;
   content: '';
-  opacity: 0;
-  background: rgba(241, 240, 232, 0.84);
+  opacity: 0.92;
+  background: rgba(241, 240, 232, 0.9);
   box-shadow: 0 16px 44px rgba(20, 37, 31, 0.12);
   backdrop-filter: blur(14px);
   transition: opacity 200ms ease;
@@ -2528,7 +2528,7 @@ button {
 
 .journey-rail:hover::before,
 .journey-rail:focus-within::before {
-  opacity: 1;
+  opacity: 0.98;
 }
 
 .journey-rail__track {
@@ -2591,8 +2591,9 @@ button {
 }
 
 .journey-rail a > span {
-  font-size: 7px;
-  opacity: 0.55;
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 1;
 }
 
 .journey-rail a strong {
@@ -2618,6 +2619,12 @@ button {
 
 .journey-rail li.is-active a strong {
   font-weight: 600;
+}
+
+@media (min-width: 1061px) {
+  .contact__content {
+    padding-left: 118px;
+  }
 }
 
 .hero__scroll {
