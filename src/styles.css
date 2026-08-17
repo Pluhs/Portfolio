@@ -2344,6 +2344,15 @@ button {
     gap: 30px;
   }
 
+  .experience-list {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+
+  .company-experience {
+    border-radius: 0;
+  }
+
   .company-experience__mast {
     grid-template-columns: 58px 1fr;
     gap: 14px;
