@@ -2504,12 +2504,13 @@ button {
   position: fixed;
   top: 50%;
   right: auto;
-  left: 15px;
+  left: 8px;
   z-index: 35;
-  width: 104px;
-  padding: 16px 8px 14px 34px;
+  width: 58px;
+  padding: 14px 6px 13px 29px;
   color: var(--ink);
   transform: translateY(-50%);
+  transition: width 200ms ease;
 }
 
 .journey-rail::before {
@@ -2519,7 +2520,7 @@ button {
   border: 1px solid rgba(20, 37, 31, 0.13);
   border-radius: 18px;
   content: '';
-  opacity: 0.92;
+  opacity: 0;
   background: rgba(241, 240, 232, 0.9);
   box-shadow: 0 16px 44px rgba(20, 37, 31, 0.12);
   backdrop-filter: blur(14px);
@@ -2531,11 +2532,16 @@ button {
   opacity: 0.98;
 }
 
+.journey-rail:hover,
+.journey-rail:focus-within {
+  width: 164px;
+}
+
 .journey-rail__track {
   position: absolute;
-  top: 28px;
-  bottom: 26px;
-  left: 24px;
+  top: 26px;
+  bottom: 24px;
+  left: 21px;
   width: 1px;
   background: rgba(20, 37, 31, 0.3);
   pointer-events: none;
@@ -2553,14 +2559,14 @@ button {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
   list-style: none;
 }
 
 .journey-rail a::before {
   position: absolute;
   top: 50%;
-  left: -14px;
+  left: -12px;
   width: 7px;
   height: 7px;
   border: 1px solid currentColor;
@@ -2584,19 +2590,30 @@ button {
   min-height: 19px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
   text-decoration: none;
   font-family: var(--mono);
   line-height: 1;
 }
 
 .journey-rail a > span {
+  min-width: 22px;
+  min-height: 17px;
+  padding: 2px 3px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(241, 240, 232, 0.92);
+  box-shadow: 0 1px 5px rgba(20, 37, 31, 0.12);
   font-size: 10px;
   font-weight: 600;
   opacity: 1;
 }
 
 .journey-rail a strong {
+  min-width: 0;
+  max-width: 0;
   overflow: hidden;
   font-size: 8px;
   font-weight: 500;
@@ -2609,6 +2626,7 @@ button {
 
 .journey-rail:hover a strong,
 .journey-rail:focus-within a strong {
+  max-width: 96px;
   opacity: 1;
   transform: none;
 }
@@ -2622,8 +2640,8 @@ button {
 }
 
 @media (min-width: 1061px) {
-  .contact__content {
-    padding-left: 118px;
+  :root {
+    --shell: min(1360px, calc(100vw - 152px));
   }
 }
 
