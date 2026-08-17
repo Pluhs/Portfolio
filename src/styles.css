@@ -2169,7 +2169,7 @@ button {
   }
 
   .hero__name {
-    font-size: clamp(3.25rem, 17.25vw, 6.8rem);
+    font-size: clamp(3.05rem, 16vw, 6.8rem);
     line-height: 0.77;
   }
 
