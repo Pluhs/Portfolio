@@ -2506,11 +2506,10 @@ button {
   right: auto;
   left: 8px;
   z-index: 35;
-  width: 58px;
+  width: 104px;
   padding: 14px 6px 13px 29px;
   color: var(--ink);
   transform: translateY(-50%);
-  transition: width 200ms ease;
 }
 
 .journey-rail::before {
@@ -2530,11 +2529,6 @@ button {
 .journey-rail:hover::before,
 .journey-rail:focus-within::before {
   opacity: 0.98;
-}
-
-.journey-rail:hover,
-.journey-rail:focus-within {
-  width: 164px;
 }
 
 .journey-rail__track {
@@ -2597,23 +2591,12 @@ button {
 }
 
 .journey-rail a > span {
-  min-width: 22px;
-  min-height: 17px;
-  padding: 2px 3px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(241, 240, 232, 0.92);
-  box-shadow: 0 1px 5px rgba(20, 37, 31, 0.12);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
-  opacity: 1;
+  opacity: 0.9;
 }
 
 .journey-rail a strong {
-  min-width: 0;
-  max-width: 0;
   overflow: hidden;
   font-size: 8px;
   font-weight: 500;
@@ -2626,7 +2609,6 @@ button {
 
 .journey-rail:hover a strong,
 .journey-rail:focus-within a strong {
-  max-width: 96px;
   opacity: 1;
   transform: none;
 }
