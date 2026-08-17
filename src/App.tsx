@@ -64,6 +64,88 @@ function Header() {
   )
 }
 
+const journeyStops = [
+  { id: 'top', label: 'Hello' },
+  { id: 'aeroml', label: 'AeroML' },
+  { id: 'atlasml', label: 'AtlasML' },
+  { id: 'sgtv', label: 'SGTV' },
+  { id: 'asyncra', label: 'Asyncra' },
+  { id: 'more-projects', label: 'More work' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'contact', label: 'Contact' },
+]
+
+function JourneyRail() {
+  const [active, setActive] = useState('top')
+
+  useEffect(() => {
+    const sections = journeyStops
+      .map((stop) => document.getElementById(stop.id))
+      .filter((section): section is HTMLElement => Boolean(section))
+
+    let frame = 0
+    let navigationLockUntil = 0
+    const update = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        if (performance.now() < navigationLockUntil) return
+        const marker = window.scrollY + window.innerHeight * 0.32
+        let current = sections[0]?.id ?? 'top'
+
+        sections.forEach((section) => {
+          if (section.offsetTop <= marker) current = section.id
+        })
+
+        const reachedBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4
+        setActive(reachedBottom ? 'contact' : current)
+      })
+    }
+
+    const followHash = () => {
+      const target = window.location.hash.slice(1)
+      if (!journeyStops.some((stop) => stop.id === target)) return
+      navigationLockUntil = performance.now() + 1400
+      setActive(target)
+      window.setTimeout(update, 1450)
+    }
+
+    if (window.location.hash) followHash()
+    else update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    window.addEventListener('hashchange', followHash)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+      window.removeEventListener('hashchange', followHash)
+    }
+  }, [])
+
+  const activeIndex = Math.max(0, journeyStops.findIndex((stop) => stop.id === active))
+
+  return (
+    <nav className="journey-rail" aria-label="Page navigation">
+      <div className="journey-rail__track" aria-hidden="true">
+        <span style={{ height: `${(activeIndex / (journeyStops.length - 1)) * 100}%` }} />
+      </div>
+      <ol>
+        {journeyStops.map((stop, index) => (
+          <li key={stop.id} className={active === stop.id ? 'is-active' : ''}>
+            <a
+              href={`#${stop.id}`}
+              aria-current={active === stop.id ? 'location' : undefined}
+            >
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <strong>{stop.label}</strong>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
 function HeroSystem() {
   const visualRef = useRef<HTMLDivElement>(null)
 
@@ -150,14 +232,17 @@ function Hero() {
             <span>Mohammed</span>
             <span>Al Assad</span>
           </p>
+          <figure className="hero__portrait">
+            <img src={`${ASSET_ROOT}mohammed-graduation.jpg`} alt="Mohammed Al Assad in his Concordia graduation gown" />
+            <figcaption>Concordia Software Engineering · 2026</figcaption>
+          </figure>
         </div>
         <div className="hero__statement">
           <p className="hero__status"><span /> Available for full-time roles</p>
-          <h1>I build software that stays useful after the happy path ends.</h1>
+          <h1>I like building the parts that make software reliable.</h1>
           <p className="hero__intro">
-            Concordia Software Engineering graduate working across distributed systems, product
-            infrastructure, and applied AI. Backend is home base; I work full-stack to make the
-            whole product better.
+            I’m a Concordia Software Engineering graduate in Montréal. I’m most at home in backend
+            systems, but I work across the product when that is what it takes to ship something good.
           </p>
           <div className="hero__actions">
             <a className="action-link action-link--primary" href={EMAIL_URL}>
@@ -259,21 +344,20 @@ function AsyncraProject() {
   }, [])
 
   return (
-    <article className="project project--asyncra">
+    <article id="asyncra" className="project project--asyncra">
       <div className="project__copy reveal">
         <p className="project__kicker">04 / Durable orchestration</p>
         <h3>Asyncra</h3>
-        <p className="project__thesis">Queues are easy. Recovery is the product.</p>
+        <p className="project__thesis">I built a queue system to learn what happens when workers fail.</p>
         <p className="project__description">
-          A Postgres-backed job orchestrator with retries, leases, heartbeats, stale-worker
-          recovery, idempotency, placement decisions, and an operator console that tells the truth.
+          Asyncra is a Postgres-backed job runner with retries, leases, heartbeats, crash recovery,
+          idempotency, and a console where I can see what every worker is doing.
         </p>
         <div className="asyncra-motivation">
           <span>Why I built it</span>
           <p>
-            I wanted to learn distributed systems by building through the failure cases: concurrent
-            workers, expiring leases, safe retries, idempotency, crash recovery, and the operational
-            state needed to explain what actually happened.
+            Reading about distributed systems was not enough for me. I wanted to break workers,
+            expire leases, retry jobs, and then prove that the system recovered without doing work twice.
           </p>
         </div>
         <p className="project__metric">
@@ -338,7 +422,7 @@ function AtlasVisual() {
 
 function AtlasProject() {
   return (
-    <article className="project project--atlas">
+    <article id="atlasml" className="project project--atlas">
       <AtlasVisual />
       <div className="project__copy reveal">
         <div className="atlas-lineage" aria-label="AeroML evolved into AtlasML">
@@ -348,11 +432,10 @@ function AtlasProject() {
         </div>
         <p className="project__kicker">02 / Active · Personal continuation of AeroML</p>
         <h3>AtlasML</h3>
-        <p className="project__thesis">I kept building after the capstone ended.</p>
+        <p className="project__thesis">After AeroML, I wanted to keep going.</p>
         <p className="project__description">
-          I’m actively building AtlasML as an independent continuation of AeroML’s local-first idea—a
-          production-minded AutoML product: durable state, recoverable jobs, verified artifacts,
-          portable workspaces, and bounded model execution across a self-contained desktop runtime.
+          AtlasML is my personal continuation of AeroML. I’m rebuilding the idea around durable
+          workspaces, recoverable jobs, verified model artifacts, and a desktop app that owns its data.
         </p>
         <p className="project__metric project__metric--atlas">
           <strong>116</strong>
@@ -361,8 +444,8 @@ function AtlasProject() {
         <div className="atlas-direction">
           <span>Actively building toward</span>
           <p>
-            Better AutoML through evidence, not feature accumulation. Model selection,
-            preprocessing, and evaluation changes only ship when held-out results justify them.
+            A smaller, more dependable AutoML tool. I only want to add model or preprocessing
+            choices when the test results show that they actually help.
           </p>
         </div>
         <TechStack items={['Electron', 'React', 'Spring Boot', 'PostgreSQL', 'Python', 'XGBoost', 'LightGBM', 'CatBoost']} />
@@ -378,15 +461,15 @@ function AtlasProject() {
 
 function SgtvProject() {
   return (
-    <article className="project project--sgtv">
+    <article id="sgtv" className="project project--sgtv">
       <div className="project__copy reveal">
         <p className="project__kicker">03 / Active product leadership · Secret Garden TV</p>
         <h3>SGTV App</h3>
-        <p className="project__thesis">An immersive digital home for its stories.</p>
+        <p className="project__thesis">I’m helping turn SGTV’s ideas into a real product.</p>
         <p className="project__description">
-          I’m leading the early product and technical direction—shaping how SGTV’s video library,
-          characters, and stories can come together in one immersive experience. The work is still
-          in discovery, so the product is not being locked into a technology stack too early.
+          I’m working with the team to shape how its videos, characters, and stories fit together.
+          We are still figuring out the right experience, so I’m not pretending the technical choices
+          are settled before the product is.
         </p>
         <p className="project__metric project__metric--sgtv">
           <strong>0→1</strong>
@@ -395,8 +478,8 @@ function SgtvProject() {
         <div className="sgtv-focus">
           <span>Now building</span>
           <p>
-            A cloud-powered app centered on video streaming, with room for interactive ways
-            to explore the SGTV world. Product scope and technology choices are being validated now.
+            A cloud-backed streaming app with room for children to explore the SGTV world in more
+            interactive ways. The product and architecture are still taking shape.
           </p>
         </div>
         <TechStack
@@ -426,21 +509,21 @@ function SgtvProject() {
 const aeroStages = [
   {
     code: 'Bronze',
-    label: 'Ingest the messy reality',
-    detail: 'Stream large CSV and Excel datasets into profiled, traceable columnar artifacts.',
-    personal: 'I substantially optimized this path: streaming ingestion, progress feedback, safer limits, and fewer UI freezes.',
+    label: 'Bring the data in',
+    detail: 'Upload large CSV and Excel files, profile them, and keep track of where each artifact came from.',
+    personal: 'I worked on streaming ingestion, progress updates, safer limits, and keeping large uploads from freezing the UI.',
   },
   {
     code: 'Silver',
-    label: 'Make it trustworthy',
-    detail: 'Apply a deterministic cleaning plan while preserving lineage and reproducibility.',
-    personal: 'I helped harden the integration around failures, caching, validation, and the desktop workflow that held the pieces together.',
+    label: 'Clean it the same way every time',
+    detail: 'Apply a saved cleaning plan while keeping the original data and every transformation traceable.',
+    personal: 'I worked on validation, caching, failure handling, and the desktop flow that connected these steps.',
   },
   {
     code: 'Gold',
-    label: 'Put the model to work',
-    detail: 'Train, compare, explain, and replay predictions without leaving the local desktop app.',
-    personal: 'I shipped persistent training progress, portable workspace bundles, quality gates, and the final reliability work behind the demo.',
+    label: 'Train and compare models',
+    detail: 'Train models, compare their results, explain predictions, and run them again inside the desktop app.',
+    personal: 'I built persistent training progress, portable workspace bundles, quality checks, and reliability fixes for the final demo.',
   },
 ]
 
@@ -538,10 +621,10 @@ function AeroContributions() {
     <section className="aero-contributions" aria-labelledby="aero-contributions-title">
       <div className="aero-contributions__intro reveal">
         <p>My contribution</p>
-        <h4 id="aero-contributions-title">Where I went deepest.</h4>
+        <h4 id="aero-contributions-title">The parts I worked on directly.</h4>
         <span>
-          AeroML was a team effort. These are the parts I can speak about as an owner, not just as
-          someone who was in the room.
+          AeroML was a team effort. This is the work I can explain in detail because I built it,
+          reviewed it, or was responsible for getting it over the line.
         </span>
       </div>
       <ol className="aero-contributions__list">
@@ -568,11 +651,11 @@ function AeroProject() {
           </div>
           <p className="project__kicker">01 / Technical co-lead · Pratt &amp; Whitney Canada capstone</p>
           <h3>AeroML</h3>
-          <p className="project__thesis">Where engineering depth became shared technical leadership.</p>
+          <p className="project__thesis">The project where I learned to co-lead and ship as a team.</p>
           <p className="project__description">
-            AeroML is a local-first desktop AutoML platform built with a 10+ engineer team for
-            manufacturing workflows. I co-led technical direction and delivery, then went deepest on
-            the integration work that made the product fast, portable, secure, and demo-ready.
+            We built AeroML with a team of more than ten engineers for a Pratt &amp; Whitney Canada
+            manufacturing use case. I co-led the technical work and focused on the backend, desktop
+            integration, background jobs, packaging, and the pieces that had to work together on demo day.
           </p>
           <div className="aero-proof" aria-label="AeroML outcomes">
             <p><strong>10+</strong><span>person team co-led across frontend, backend, ML, and delivery</span></p>
@@ -591,30 +674,30 @@ const moreProjects = [
   {
     name: 'ConUMaps',
     label: 'Mobile campus companion · extended team capstone',
-    description: 'An Expo mobile app that connects outdoor directions, indoor pathfinding, Concordia shuttle data, Google Calendar, and a multi-stop smart planner. After the course project, I continued the repo with a feature-domain refactor, routing improvements, stronger tests, and a more reliable local setup.',
+    description: 'A campus navigation app my team built at Concordia. It combines outdoor directions, indoor paths, shuttle data, calendars, and multi-stop planning. I kept working on it after the course to clean up the architecture, improve routing, and make the project easier to run.',
     stack: ['React Native', 'Expo', 'Flask', 'Mapbox', 'Google Calendar'],
   },
   {
     name: 'SEED',
     label: 'AI job-search operating system · formerly MapleLaunch · paused',
-    description: 'A web-first system for multi-source job discovery, transparent fit scoring, resume and application-packet workflows, and end-to-end application tracking. Its architecture combines a Next.js product surface, Spring control plane, Supabase state, and a durable Python ingestion worker for normalization and deduplication.',
+    description: 'I started SEED to bring job discovery, fit scoring, tailored application documents, and application tracking into one place. The project is paused, but it gave me a chance to work with Next.js, Spring, Supabase, and a Python ingestion worker.',
     stack: ['Next.js', 'Spring Boot', 'Supabase', 'Python', 'Electron'],
   },
   {
     name: 'YTtoMedia',
     label: 'Packaged cross-platform desktop utility',
-    description: 'A privacy-conscious YouTube audio and video downloader with real format probing, a concurrent download queue, progress reporting, recent files, and extractor updates. The macOS and Windows builds bundle their own yt-dlp and media runtimes so the app works without a developer environment.',
+    description: 'A desktop YouTube downloader I made for audio and video. It checks the real formats, queues multiple downloads, reports progress, and packages yt-dlp and FFmpeg so the Mac and Windows builds work without a developer setup.',
     stack: ['Electron', 'Node.js', 'yt-dlp', 'FFmpeg', 'GitHub Actions'],
   },
 ]
 
 function MoreProjects() {
   return (
-    <div className="more-projects">
+    <div id="more-projects" className="more-projects">
       <div className="section-shell">
         <header className="more-projects__heading reveal">
           <p>05 / More projects</p>
-          <h2>More things I’ve shipped, tested, or learned from.</h2>
+          <h2>Smaller projects that taught me something useful.</h2>
         </header>
         <div className="more-projects__list reveal">
           {moreProjects.map((project, index) => (
@@ -657,7 +740,7 @@ const experienceCompanies = [
         years: 'Jun 2026 — Present',
         role: 'Software Engineer & Technical Lead',
         context: 'Volunteer · SGTV digital platform',
-        detail: 'Leading the product from stakeholder requirements and system architecture through frontend flows, backend services, APIs, authentication, media delivery, cloud infrastructure, and CI/CD.',
+        detail: 'I’m helping the team turn its ideas into a product: clarifying requirements, planning the architecture, and working through the frontend, backend, media, cloud, and delivery decisions.',
         stack: ['Cloud architecture', 'Video streaming', 'APIs', 'Authentication', 'CI/CD'],
       },
     ],
@@ -672,7 +755,7 @@ const experienceCompanies = [
         years: 'Sep 2025 — Apr 2026',
         role: 'Software Engineer & Technical Co-Lead',
         context: 'AeroML industry capstone',
-        detail: 'Co-led a 10+ person team building a local-first AutoML desktop platform for internal aerospace-manufacturing workflows.',
+        detail: 'I co-led a team of more than ten engineers building a local-first AutoML desktop app for a Pratt & Whitney Canada manufacturing use case.',
         impact: '38.2% lower MAE than the internal baseline · model development reduced from weeks to minutes',
         stack: ['Python', 'FastAPI', 'React', 'Electron', 'DuckDB', 'PyArrow'],
       },
@@ -688,14 +771,14 @@ const experienceCompanies = [
         years: 'May 2024 — Aug 2024',
         role: 'Software Developer Intern',
         context: 'Python backend · Linux',
-        detail: 'Built backend tools and integrated Mend REST APIs for dependency, vulnerability, and compliance workflows; improved performance through profiling, concurrency, and thread pools.',
+        detail: 'I built Python backend tools around the Mend APIs for dependency, vulnerability, and compliance work. I also profiled slow paths and used concurrency and thread pools to improve them.',
         stack: ['Python', 'Linux', 'REST APIs', 'Concurrency', 'Mend'],
       },
       {
         years: 'Sep 2023 — Dec 2023',
         role: 'Software Developer Intern',
         context: 'Java and Node.js services',
-        detail: 'Developed backend services with Spring Boot, Node.js, MongoDB, REST APIs, and Docker while supporting Azure deployments and improving Git and CI/CD workflows.',
+        detail: 'I worked on Spring Boot and Node.js services backed by MongoDB, packaged them with Docker, supported Azure deployments, and improved the team’s Git and CI/CD workflow.',
         stack: ['Spring Boot', 'Node.js', 'MongoDB', 'Docker', 'Azure'],
       },
     ],
@@ -708,7 +791,7 @@ function Experience() {
       <div className="section-shell">
         <header className="experience-heading reveal">
           <p>02 / Experience</p>
-          <h2>I build across the stack—and take responsibility across the seams.</h2>
+          <h2>The places where I learned how real teams build software.</h2>
         </header>
         <div className="experience-list">
           {experienceCompanies.map((item, index) => (
@@ -756,8 +839,8 @@ function Contact() {
         <span />
       </div>
       <div className="contact__content">
-        <p>Have a hard system or a useful product to build?</p>
-        <h2>Let’s make it work<br />in the messy world.</h2>
+        <p>Working on something useful?</p>
+        <h2>I’d like to hear<br />about it.</h2>
         <div className="contact__links">
           <a href={EMAIL_URL}>
             Let’s talk <ExternalArrow />
@@ -843,6 +926,7 @@ export default function App() {
       <a className="skip-link" href="#work">Skip to selected work</a>
       <RevealObserver />
       <Header />
+      <JourneyRail />
       <main>
         <Hero />
         <Work />
