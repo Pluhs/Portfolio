@@ -806,6 +806,35 @@ function Work() {
 
 const experienceCompanies = [
   {
+    company: 'Ericsson',
+    location: 'Montréal, QC',
+    visual: `${ASSET_ROOT}high-res-assets/ericsson-logo-hq.png`,
+    visualClass: 'company-experience__visual--ericsson',
+    positions: [
+      {
+        years: 'November 2026 — Present',
+        role: 'DevOps Developer',
+        context: 'DevOps',
+        detail: 'I joined Ericsson in Montréal as a DevOps Developer in November 2026.',
+        stack: [],
+      },
+      {
+        years: 'May 2024 — Aug 2024',
+        role: 'Software Developer Intern',
+        context: 'Python backend · Linux',
+        detail: 'I built Python backend tools around the Mend APIs for dependency, vulnerability, and compliance work. I also profiled slow paths and used concurrency and thread pools to improve them.',
+        stack: ['Python', 'Linux', 'REST APIs', 'Concurrency', 'Mend'],
+      },
+      {
+        years: 'Sep 2023 — Dec 2023',
+        role: 'Software Developer Intern',
+        context: 'Java and Node.js services',
+        detail: 'I worked on Spring Boot and Node.js services backed by MongoDB, packaged them with Docker, supported Azure deployments, and improved the team’s Git and CI/CD workflow.',
+        stack: ['Spring Boot', 'Node.js', 'MongoDB', 'Docker', 'Azure'],
+      },
+    ],
+  },
+  {
     company: 'Secret Garden TV',
     location: 'Canada',
     visual: `${ASSET_ROOT}high-res-assets/secret-garden-character-hq.png`,
@@ -833,35 +862,6 @@ const experienceCompanies = [
         detail: 'I co-led a team of more than ten engineers building a local-first AutoML desktop app for a Pratt & Whitney Canada manufacturing use case.',
         impact: '38.2% lower MAE than the internal baseline · model development reduced from weeks to minutes',
         stack: ['Python', 'FastAPI', 'React', 'Electron', 'DuckDB', 'PyArrow'],
-      },
-    ],
-  },
-  {
-    company: 'Ericsson',
-    location: 'Montréal, QC',
-    visual: `${ASSET_ROOT}high-res-assets/ericsson-logo-hq.png`,
-    visualClass: 'company-experience__visual--ericsson',
-    positions: [
-      {
-        years: 'November 2026 — Present',
-        role: 'DevOps Developer',
-        context: 'DevOps',
-        detail: 'I joined Ericsson in Montréal as a DevOps Developer in November 2026.',
-        stack: [],
-      },
-      {
-        years: 'May 2024 — Aug 2024',
-        role: 'Software Developer Intern',
-        context: 'Python backend · Linux',
-        detail: 'I built Python backend tools around the Mend APIs for dependency, vulnerability, and compliance work. I also profiled slow paths and used concurrency and thread pools to improve them.',
-        stack: ['Python', 'Linux', 'REST APIs', 'Concurrency', 'Mend'],
-      },
-      {
-        years: 'Sep 2023 — Dec 2023',
-        role: 'Software Developer Intern',
-        context: 'Java and Node.js services',
-        detail: 'I worked on Spring Boot and Node.js services backed by MongoDB, packaged them with Docker, supported Azure deployments, and improved the team’s Git and CI/CD workflow.',
-        stack: ['Spring Boot', 'Node.js', 'MongoDB', 'Docker', 'Azure'],
       },
     ],
   },
