@@ -4,6 +4,7 @@ const GITHUB_URL = 'https://github.com/Pluhs'
 const LINKEDIN_URL = 'https://www.linkedin.com/in/mohammed-alassad/'
 const EMAIL_URL = 'mailto:mohammed.alassad2001@gmail.com'
 const ASSET_ROOT = import.meta.env.BASE_URL
+const ATLASML_WEBSITE_URL = import.meta.env.VITE_ATLASML_WEBSITE_URL?.trim() || ''
 
 type ArrowProps = {
   direction?: 'right' | 'down'
@@ -66,9 +67,9 @@ function Header() {
 
 const journeyStops = [
   { id: 'top', label: 'Hello' },
-  { id: 'aeroml', label: 'AeroML' },
   { id: 'atlasml', label: 'AtlasML' },
   { id: 'sgtv', label: 'SGTV' },
+  { id: 'aeroml', label: 'AeroML' },
   { id: 'asyncra', label: 'Asyncra' },
   { id: 'more-projects', label: 'More work' },
   { id: 'experience', label: 'Experience' },
@@ -238,17 +239,17 @@ function Hero() {
           </figure>
         </div>
         <div className="hero__statement">
-          <p className="hero__status"><span /> Available for full-time roles</p>
+          <p className="hero__status"><span /> DevOps Developer at Ericsson</p>
           <h1>I like building the parts that make software reliable.</h1>
           <p className="hero__intro">
-            I’m a Concordia Software Engineering graduate in Montréal. I’m most at home in backend
+            I’m a DevOps Developer at Ericsson and a Concordia Software Engineering graduate in Montréal. I’m most at home in backend
             systems, but I work across the product when that is what it takes to ship something good.
           </p>
           <div className="hero__actions">
             <a className="action-link action-link--primary" href={EMAIL_URL}>
               Let’s talk <ExternalArrow />
             </a>
-            <a className="action-link" href="#aeroml">
+            <a className="action-link" href="#atlasml">
               View selected work <Arrow direction="down" />
             </a>
           </div>
@@ -381,41 +382,108 @@ function AsyncraProject() {
 }
 
 const atlasStages = [
-  { label: 'Workspace', note: 'owns the boundary' },
-  { label: 'AutoML', note: 'selects under bounds' },
-  { label: 'Recover', note: 'survives a restart' },
-  { label: 'Export', note: 'proves portability' },
+  {
+    label: 'Local workspace',
+    note: 'Import a dataset and inspect its schema on your machine.',
+    previewTitle: 'Workspace · inspected locally',
+    image: 'atlasml-workspace.webp',
+    alt: 'AtlasML workspace showing a local dataset and its tabular preview',
+    width: 1600,
+    height: 1000,
+  },
+  {
+    label: 'Immutable version',
+    note: 'A cleaning decision becomes a named derived version.',
+    previewTitle: 'Dataset version · source preserved',
+    image: 'atlasml-version.webp',
+    alt: 'AtlasML cleaning summary showing an immutable derived dataset version and its transformations',
+    width: 1229,
+    height: 768,
+  },
+  {
+    label: 'Bounded training',
+    note: 'A local worker runs an explicit training policy.',
+    previewTitle: 'Training run · policy bounded',
+    image: 'atlasml-training.webp',
+    alt: 'AtlasML workbench showing a completed local training workflow and model performance',
+    width: 1207,
+    height: 900,
+  },
+  {
+    label: 'Model record',
+    note: 'Evaluation and artifacts remain tied to that run.',
+    previewTitle: 'Model review · evaluated locally',
+    image: 'atlasml-model-review.webp',
+    alt: 'AtlasML model review showing a completed local classification model and its evaluation metrics',
+    width: 1400,
+    height: 788,
+  },
+  {
+    label: 'Safe prediction',
+    note: 'Compatibility is checked before an inference job begins.',
+    previewTitle: 'Prediction · compatibility checked',
+    image: 'atlasml-prediction.webp',
+    alt: 'AtlasML prediction workflow showing compatible input data and a completed local prediction run',
+    width: 1200,
+    height: 919,
+  },
 ]
 
 function AtlasVisual() {
   const [active, setActive] = useState(0)
-
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const interval = window.setInterval(() => {
-      setActive((current) => (current + 1) % atlasStages.length)
-    }, 2200)
-    return () => window.clearInterval(interval)
-  }, [])
+  const activeStage = atlasStages[active]
 
   return (
-    <div className="atlas-visual" aria-label={`AtlasML flow: ${atlasStages[active].label}, ${atlasStages[active].note}`}>
-      <div className="atlas-orbit" aria-hidden="true">
-        <span className="atlas-orbit__ring atlas-orbit__ring--one" />
-        <span className="atlas-orbit__ring atlas-orbit__ring--two" />
-        <span className="atlas-orbit__core">A</span>
+    <div className="atlas-visual">
+      <figure id="atlas-product-preview" className="atlas-product">
+        <figcaption className="atlas-product__label">
+          <img src={`${ASSET_ROOT}atlasml-icon.webp`} alt="" width="52" height="52" />
+          <span>
+            <small>Current desktop build</small>
+            <strong>{activeStage.previewTitle}</strong>
+          </span>
+        </figcaption>
+        <div className="atlas-product__frame">
+          {atlasStages.map((stage, index) => (
+            <img
+              key={stage.image}
+              className={active === index ? 'is-active' : ''}
+              src={`${ASSET_ROOT}${stage.image}`}
+              alt={active === index ? stage.alt : ''}
+              aria-hidden={active === index ? undefined : true}
+              width={stage.width}
+              height={stage.height}
+              loading="lazy"
+              decoding="async"
+            />
+          ))}
+        </div>
+      </figure>
+      <div className="atlas-system">
+        <div className="atlas-system__heading">
+          <span>One system</span>
+          <strong>Five durable steps</strong>
+        </div>
+        <ol className="atlas-flow" aria-label="AtlasML system flow">
+          {atlasStages.map((stage, index) => (
+            <li key={stage.label} className={active === index ? 'is-active' : ''}>
+              <button
+                type="button"
+                aria-pressed={active === index}
+                aria-controls="atlas-product-preview"
+                onClick={() => setActive(index)}
+              >
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <strong>{stage.label}</strong>
+              </button>
+            </li>
+          ))}
+        </ol>
+        <p className="atlas-flow__detail" aria-live="polite">
+          <span>{String(active + 1).padStart(2, '0')}</span>
+          {activeStage.note}
+        </p>
       </div>
-      <ol className="atlas-flow">
-        {atlasStages.map((stage, index) => (
-          <li key={stage.label} className={active === index ? 'is-active' : ''}>
-            <button type="button" onClick={() => setActive(index)}>
-              <span>0{index + 1}</span>
-              <strong>{stage.label}</strong>
-              <small>{stage.note}</small>
-            </button>
-          </li>
-        ))}
-      </ol>
     </div>
   )
 }
@@ -430,29 +498,36 @@ function AtlasProject() {
           <Arrow />
           <strong>AtlasML</strong>
         </div>
-        <p className="project__kicker">02 / Active · Personal continuation of AeroML</p>
+        <p className="project__kicker">01 / Flagship product · Local-first AutoML</p>
         <h3>AtlasML</h3>
-        <p className="project__thesis">After AeroML, I wanted to keep going.</p>
+        <p className="project__thesis">From raw data to predictions. Locally.</p>
         <p className="project__description">
-          AtlasML is my personal continuation of AeroML. I’m rebuilding the idea around durable
-          workspaces, recoverable jobs, verified model artifacts, and a desktop app that owns its data.
+          I’m building AtlasML as a local-first desktop application for tabular machine learning.
+          It connects data quality, cleaning, training, evaluation, and prediction in one durable
+          workflow, keeping workspace data and generated artifacts on the user’s machine unless they export them.
         </p>
         <p className="project__metric project__metric--atlas">
-          <strong>116</strong>
-          <span>verified operations<br />across 19 evidence scenarios</span>
+          <strong>8</strong>
+          <span>connected product stages<br />workspace → prediction</span>
         </p>
         <div className="atlas-direction">
-          <span>Actively building toward</span>
+          <span>Designed to stay inspectable</span>
           <p>
-            A smaller, more dependable AutoML tool. I only want to add model or preprocessing
-            choices when the test results show that they actually help.
+            Dataset versions, training policy, evaluation boundaries, lineage, models, and predictions
+            stay connected instead of disappearing behind a one-click AutoML result.
           </p>
         </div>
         <TechStack items={['Electron', 'React', 'Spring Boot', 'PostgreSQL', 'Python', 'XGBoost', 'LightGBM', 'CatBoost']} />
         <div className="project__links">
-          <a href="https://github.com/Pluhs/AtlasML" target="_blank" rel="noreferrer">
-            Follow the independent build <ExternalArrow />
-          </a>
+          {ATLASML_WEBSITE_URL ? (
+            <a href={ATLASML_WEBSITE_URL} target="_blank" rel="noreferrer">
+              Explore the AtlasML website <ExternalArrow />
+            </a>
+          ) : (
+            <span className="project__link-status">
+              <span aria-hidden="true" /> Public website in preparation
+            </span>
+          )}
         </div>
       </div>
     </article>
@@ -463,7 +538,7 @@ function SgtvProject() {
   return (
     <article id="sgtv" className="project project--sgtv">
       <div className="project__copy reveal">
-        <p className="project__kicker">03 / Active product leadership · Secret Garden TV</p>
+        <p className="project__kicker">02 / Active product leadership · Secret Garden TV</p>
         <h3>SGTV App</h3>
         <p className="project__thesis">I’m helping turn SGTV’s ideas into a real product.</p>
         <p className="project__description">
@@ -647,9 +722,9 @@ function AeroProject() {
         <div className="project__copy reveal">
           <div className="aero-wordmark">
             <img src={`${ASSET_ROOT}aeroml-logo.png`} alt="" />
-            <span>Flagship project</span>
+            <span>Industry capstone</span>
           </div>
-          <p className="project__kicker">01 / Technical co-lead · Pratt &amp; Whitney Canada capstone</p>
+          <p className="project__kicker">03 / Technical co-lead · Pratt &amp; Whitney Canada capstone</p>
           <h3>AeroML</h3>
           <p className="project__thesis">The project where I learned to co-lead and ship as a team.</p>
           <p className="project__description">
@@ -720,9 +795,9 @@ function MoreProjects() {
 function Work() {
   return (
     <section id="work" className="work-section">
-      <AeroProject />
       <AtlasProject />
       <SgtvProject />
+      <AeroProject />
       <AsyncraProject />
       <MoreProjects />
     </section>
@@ -767,6 +842,13 @@ const experienceCompanies = [
     visual: `${ASSET_ROOT}high-res-assets/ericsson-logo-hq.png`,
     visualClass: 'company-experience__visual--ericsson',
     positions: [
+      {
+        years: 'November 2026 — Present',
+        role: 'DevOps Developer',
+        context: 'DevOps',
+        detail: 'I joined Ericsson in Montréal as a DevOps Developer in November 2026.',
+        stack: [],
+      },
       {
         years: 'May 2024 — Aug 2024',
         role: 'Software Developer Intern',
@@ -817,7 +899,7 @@ function Experience() {
                     <div className="position-row__story">
                       <p>{position.detail}</p>
                       {'impact' in position && position.impact && <strong>{position.impact}</strong>}
-                      <TechStack items={position.stack} label="Stack used" compact />
+                      {position.stack.length > 0 && <TechStack items={position.stack} label="Stack used" compact />}
                     </div>
                   </div>
                 ))}

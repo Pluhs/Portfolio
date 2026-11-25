@@ -25,4 +25,5 @@ Pushes to `main` are built and deployed automatically through GitHub Actions and
 
 - GitHub: https://github.com/Pluhs
 - LinkedIn: https://www.linkedin.com/in/mohammed-alassad/
+- AtlasML website CTA: set `VITE_ATLASML_WEBSITE_URL` when the public site is ready. Until then, the portfolio shows an honest launch-pending state instead of a dead link.
 - The project metrics shown on the site are grounded in the projects' documented local benchmarks and verification records.
